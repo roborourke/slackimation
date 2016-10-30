@@ -1,3 +1,6 @@
+// Get ENV vars
+require('dotenv').config();
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -20,16 +23,16 @@ var Grant = require('grant-express'),
         scope: [ 'chat:write:user' ]
       }
     });
-    
+
 var mongoURL = 'mongodb://' +
       process.env.DB_USER + ':' +
       process.env.DB_PASS + '@' +
       process.env.DB_HOST + ':' +
       process.env.DB_PORT + '/' +
       process.env.DB_NAME;
-      
+
 var mongodb = () => MongoClient.connect(mongoURL);
-    
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 app.use(session({
@@ -61,7 +64,7 @@ app.get("/ready", function(req, res){
     .then(function(collection){
       auths = collection;
       return auths.findOne({
-        user_id: req.query.user_id, 
+        user_id: req.query.user_id,
         team_id: req.query.team_id
       });
     })
@@ -86,17 +89,17 @@ app.get("/ready", function(req, res){
 
 // Slash command
 app.post("/", function (req, res) {
-  
+
   if (req.body.token !== process.env.SLACK_VERIFICATION_TOKEN) {
     res.sendStatus(500);
   }
-        
+
   // fetch access_token from mongodb
   mongodb()
     .then(db => db.collection('auths'))
-    .then(collection => collection.findOne({ 
-      user_id: req.body.user_id, 
-      team_id: req.body.team_id 
+    .then(collection => collection.findOne({
+      user_id: req.body.user_id,
+      team_id: req.body.team_id
     }))
     .then(function(doc){
       // start posting to slack editing the message for each line
@@ -104,7 +107,7 @@ app.post("/", function (req, res) {
         token: doc.access_token,
         message: req.body
       });
-      
+
       // add whimsy
       var mojibank = [
         ':boom:',
@@ -123,13 +126,13 @@ app.post("/", function (req, res) {
         ],
         newmoji,
         mojis = [];
-      
+
       while(mojis.length < 3) {
         newmoji = Math.round( Math.random() * (mojibank.length - 1) );
         if (mojis.indexOf(mojibank[newmoji]) < 0)
           mojis = mojis.concat( mojibank.splice(newmoji,1) );
       }
-      
+
       res.json({
         text: mojis.join( ' ' )
       });
