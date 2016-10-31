@@ -1,5 +1,9 @@
 // Get ENV vars
-require('dotenv').config();
+var fs = require('fs');
+fs.access( '.env', fs.constants.R_OK, err => {
+    if ( !err )
+      require('dotenv').config();
+});
 
 var express = require('express');
 var bodyParser = require('body-parser');
