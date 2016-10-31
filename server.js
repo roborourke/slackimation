@@ -1,9 +1,8 @@
 // Get ENV vars
-var fs = require('fs');
-fs.access( '.env', fs.constants.R_OK, err => {
-    if ( !err )
-      require('dotenv').config();
-});
+try {
+  require('fs').accessSync( '.env', fs.constants.R_OK ) )
+  require('dotenv').config();
+} catch(e) {}
 
 var express = require('express');
 var bodyParser = require('body-parser');
