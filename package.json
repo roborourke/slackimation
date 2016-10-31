@@ -1,7 +1,7 @@
 {
-  "name": "slack-js-console",
+  "name": "slackimation",
   "version": "0.0.1",
-  "description": "JS console for slack",
+  "description": "Animated messages for slack!",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
