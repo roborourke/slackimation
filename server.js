@@ -6,6 +6,9 @@ try {
   console.log(e);
 }
 
+// Logs
+require('now-logs')(process.env.NOW_LOGS);
+
 var url = process.env.NODE_ENV === 'production'
   ? process.env.URL
   : process.env.NOW_URL;
@@ -189,6 +192,11 @@ app.get("/boom", function (request, response) {
 
 app.get("/error", function (request, response) {
   response.render('error', Object.assign({
+  }, app.viewData));
+});
+
+app.get("/privacy", function (request, response) {
+  response.render('privacy', Object.assign({
   }, app.viewData));
 });
 

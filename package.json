@@ -15,6 +15,7 @@
     "express-session": "^1.14.1",
     "grant-express": "^3.6.5",
     "mongodb": "^2.2.11",
+    "now-logs": "0.0.7",
     "request": "^2.76.0",
     "request-promise": "^4.1.1",
     "threads": "^0.7.0"
@@ -28,5 +29,12 @@
     "emoji",
     "slack"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "now": {
+    "name": "slackimation",
+    "alias": "slackimation.chat",
+    "files": [
+      ".env"
+    ]
+  }
 }
