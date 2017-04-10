@@ -6,6 +6,10 @@ try {
   console.log(e);
 }
 
+var url = process.env.NODE_ENV === 'production'
+  ? process.env.URL
+  : process.env.NOW_URL;
+
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -19,7 +23,7 @@ var Grant = require('grant-express'),
     grant = new Grant({
       server: {
         protocol: "https",
-        host: "charm-chest.hyperdev.space",
+        host: url,
         callback: "/ready"
       },
       slack: {
@@ -144,8 +148,8 @@ app.post("/", function (req, res) {
     })
     .catch(function(err){
       res.json({
-        text: ':scream_cat: I couldn\'t find your slack credentials! ' +
-          'Try signing in over at <https://charm-chest.hyperdev.space/>'
+        text: `:scream_cat: I couldn\'t find your slack credentials! ` +
+          `Try signing in over at <https://${url}/>`
       });
     });
 });
@@ -169,7 +173,7 @@ app.use(express.static('public'));
 
 app.viewData = {
   title: 'Animator!',
-  state: process.env.SLACK_VERIFICATION_TOKEN
+  state: process.env.SLACK_STATE
 };
 
 // http://expressjs.com/en/starter/basic-routing.html

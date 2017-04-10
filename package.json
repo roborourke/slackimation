@@ -19,15 +19,13 @@
     "request-promise": "^4.1.1",
     "threads": "^0.7.0"
   },
-  "engines": {
-    "node": "4.4.5"
-  },
   "repository": {
     "type": "git",
-    "url": "https://hyperdev.com/#!/project/charm-chest"
+    "url": "https://github.com/roborourke/slackimation"
   },
   "keywords": [
-    "hyperdev",
+    "animation",
+    "emoji",
     "slack"
   ],
   "license": "MIT"
