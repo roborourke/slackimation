@@ -1,18 +1,8 @@
-// Get ENV vars
-try {
-  require('fs').accessSync( '.env' );
-  require('dotenv').config();
-} catch(e) {
-  console.log(e);
-}
+require('now-env');
 
-// Logs
-require('now-logs')(process.env.NOW_LOGS);
+console.log(process.env);
 
-var url = process.env.NODE_ENV === 'production'
-  ? process.env.URL
-  : process.env.NOW_URL;
-
+var url = process.env.NOW_URL;
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -20,8 +10,6 @@ var handlebars = require('express-handlebars');
 var session = require('express-session');
 var MongoClient = require('mongodb').MongoClient;
 var MongoStore = require('connect-mongo')(session);
-var threads = require('threads'),
-    spawn = threads.spawn;
 var Grant = require('grant-express'),
     grant = new Grant({
       server: {
@@ -35,6 +23,7 @@ var Grant = require('grant-express'),
         scope: [ 'chat:write:user' ]
       }
     });
+var request = require('request-promise');
 
 var mongoURL = 'mongodb://' +
       process.env.DB_USER + ':' +
@@ -115,9 +104,13 @@ app.post("/", function (req, res) {
     }))
     .then(function(doc){
       // start posting to slack editing the message for each line
-      spawn('animate.js').send({
-        token: doc.access_token,
-        message: req.body
+      request({
+        method: 'POST',
+        uri: `https://${url}/animator`,
+        form: {
+          token: doc.access_token,
+          message: req.body,
+        },
       });
 
       // add whimsy
@@ -166,13 +159,16 @@ app.post("/challenge", function (request, response) {
 
 // Use handlebars view engine
 app.engine('handlebars', handlebars.create( {
-  defaultLayout: 'main'
+  defaultLayout: 'main',
+  partialsDir: __dirname + '/views/partials',
+  layoutsDir: __dirname + '/views/layouts',
 } ).engine );
+app.set('views', __dirname + '/views')
 app.set('view engine', 'handlebars');
 app.enable('view cache');
 
 // http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 app.viewData = {
   title: 'Animator!',
@@ -201,6 +197,4 @@ app.get("/privacy", function (request, response) {
 });
 
 // listen for requests :)
-var listener = app.listen(process.env.PORT, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+app.listen();

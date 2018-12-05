@@ -1,15 +1,22 @@
 body {
-  font: 20px/1.45 Lato;
+  font: 16px/1.45 Lato;
   margin: 0 auto;
   text-align: center;
   padding: 0 0 200px 0;
   color: #454545;
 }
 
+@media only screen and (min-width: 600px) {
+  body {
+    font: 20px/1.45 Lato;
+  }
+}
+
 main,
 footer {
   margin: 0 auto;
   max-width: 600px;
+  padding: 0 20px;
 }
 
 h1, h2, h3 {
@@ -28,7 +35,7 @@ h1, h2, h3 {
     50%{background-position:4% 100%}
     100%{background-position:97% 0%}
 }
-@keyframes titleBG { 
+@keyframes titleBG {
     0%{background-position:97% 0%}
     50%{background-position:4% 100%}
     100%{background-position:97% 0%}
@@ -36,20 +43,34 @@ h1, h2, h3 {
 
 h1 {
   font-family: "Bungee Shade", sans-serif;
-  font-size: 300%;
-  margin: 50px 0 50px;
+  font-size: 150%;
+  margin: 20px;
   text-transform: uppercase;
   font-weight: 900;
-  
+
   background: linear-gradient(320deg, #e19216, #e5de2c, #31dc2d, #2dd6dc, #2d72dc, #d02ddc, #dc2d36);
   background-size: 1400% 1400%;
-  
+
   -webkit-animation: titleBG 10s ease infinite;
   -moz-animation: titleBG 10s ease infinite;
   animation: titleBG 10s ease infinite;
-  
+
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@media only screen and (min-width: 360px) {
+  h1 {
+    font-size: 200%;
+    margin: 30px 20px;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  h1 {
+    font-size: 300%;
+    margin: 50px 20px;
+  }
 }
 
 pre,

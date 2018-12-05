@@ -1,0 +1,25 @@
+{
+	"version": 2,
+    "name": "slackimation",
+	"alias": [ "slackimation.chat" ],
+	"env": {
+		"SESSION_SECRET": "@session-secret",
+		"SLACK_VERIFICATION_TOKEN": "@slack-verification-token",
+		"SLACK_CLIENT": "@slack-client",
+		"SLACK_SECRET": "@slack-secret",
+		"SLACK_STATE": "@slack-state",
+		"DB_HOST": "@db-host",
+		"DB_PORT": "@db-port",
+		"DB_USER": "@db-user",
+		"DB_PASS": "@db-pass",
+		"DB_NAME": "@db-name"
+	},
+	"builds": [
+		{ "src": "www/index.js", "use": "@now/node-server" },
+		{ "src": "animator/index.js", "use": "@now/node" }
+	],
+	"routes": [
+		{ "src": "/animator", "dest": "/animator/index.js", "methods": [ "POST" ] },
+		{ "src": "/(.*)", "dest": "/www/index.js" }
+	]
+  }
