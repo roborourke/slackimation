@@ -1,7 +1,10 @@
 {
 	"version": 2,
-    "name": "slackimation",
+	"name": "slackimation",
 	"alias": [ "slackimation.chat" ],
+	"github": {
+		"autoAlias": false
+	},
 	"env": {
 		"SESSION_SECRET": "@session-secret",
 		"SLACK_VERIFICATION_TOKEN": "@slack-verification-token",
@@ -15,11 +18,20 @@
 		"DB_NAME": "@db-name"
 	},
 	"builds": [
-		{ "src": "www/index.js", "use": "@now/node-server" },
-		{ "src": "animator/index.js", "use": "@now/node" }
+		{ "src": "next.config.js", "use": "@now/next" },
+		{ "src": "api/animate.js", "use": "@now/node" },
+		{ "src": "api/challenge.js", "use": "@now/node" },
+		{ "src": "api/message.js", "use": "@now/node" },
+		{ "src": "api/start.js", "use": "@now/node" },
+		{ "src": "api/exchange.js", "use": "@now/node" },
+		{ "src": "static/*", "use": "@now/static" }
 	],
 	"routes": [
-		{ "src": "/animator", "dest": "/animator/index.js", "methods": [ "POST" ] },
-		{ "src": "/(.*)", "dest": "/www/index.js" }
+		{ "src": "/api/message", "dest": "/api/message.js", "methods": [ "POST" ] },
+		{ "src": "/api/animate", "dest": "/api/animate.js", "methods": [ "POST" ] },
+		{ "src": "/challenge", "dest": "/api/challenge.js", "methods": [ "POST" ] },
+		{ "src": "/connect/start", "dest": "/api/start.js", "methods": [ "GET" ] },
+		{ "src": "/connect/exchange", "dest": "/api/exchange.js", "methods": [ "GET" ] },
+		{ "src": "/", "dest": "/api/message.js", "methods": [ "POST" ] }
 	]
   }

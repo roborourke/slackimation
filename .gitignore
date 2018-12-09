@@ -3,4 +3,3 @@ node_modules/
 .env
 yarn.lock
 .vscode
-now-secrets.json
