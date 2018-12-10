@@ -1,7 +1,7 @@
 require('now-env');
 const test = require('ava');
-const { getClient } = require('../utils/db');
-const { before, beforeEach, after } = require('../utils/mongo');
+const { getClient } = require('../api/utils/db');
+const { before, beforeEach, after } = require('./utils/_mongo');
 
 test.before( 'start db server', before );
 test.beforeEach( 'setup', beforeEach( { test: [] } ) );

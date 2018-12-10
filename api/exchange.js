@@ -1,6 +1,6 @@
 const fetch = require('isomorphic-fetch');
-const { getClient } = require('../utils/db');
-const { blessup } = require('../utils/server');
+const { getClient } = require('./utils/db');
+const { blessup } = require('./utils/server');
 const qs = require('querystring');
 
 // Exchange oauth token.

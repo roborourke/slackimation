@@ -1,6 +1,6 @@
 const fetch = require('isomorphic-fetch');
-const { getClient } = require('../utils/db');
-const { blessup, selfURL } = require('../utils/server');
+const { getClient } = require('./utils/db');
+const { blessup, selfURL } = require('./utils/server');
 
 module.exports = blessup( async ( req, res ) => {
 	let client;

@@ -4,7 +4,7 @@ const listen = require('test-listen');
 const fetch = require('isomorphic-fetch');
 const test = require('ava');
 const message = require('../api/message');
-const { before, beforeEach, after } = require('../utils/mongo');
+const { before, beforeEach, after } = require('./utils/_mongo');
 
 // Before & after tests.
 test.before( 'start db server', before );

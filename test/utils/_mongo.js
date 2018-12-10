@@ -1,6 +1,6 @@
 require('now-env');
 const MongodbMemoryServer = require('mongodb-memory-server').default;
-const { getClient } = require('./db');
+const { getClient } = require('../../api/utils/db');
 const { parse } = require('url');
 
 const mongod = new MongodbMemoryServer();

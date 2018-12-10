@@ -4,7 +4,7 @@ const listen = require('test-listen');
 const fetch = require('isomorphic-fetch');
 const test = require('ava');
 const animate = require('../api/animate');
-const Mitm = require('../utils/mitm');
+const Mitm = require('./utils/_mitm');
 
 const mitm = Mitm();
 mitm.intercept( 'https://slack.com/api/chat.postMessage', ( req, res ) => {

@@ -4,10 +4,10 @@ const listen = require('test-listen');
 const fetch = require('isomorphic-fetch');
 const test = require('ava');
 const exchange = require('../api/exchange');
+const { getClient } = require('../api/utils/db');
 const qs = require('querystring');
-const Mitm = require('../utils/mitm');
-const { getClient } = require('../utils/db');
-const { before, beforeEach, after } = require( '../utils/mongo' );
+const Mitm = require('./utils/_mitm');
+const { before, beforeEach, after } = require( './utils/_mongo' );
 
 // Example failed slack oauth response.
 const oauthResponseInvalid = {

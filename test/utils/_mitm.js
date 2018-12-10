@@ -1,5 +1,5 @@
 const Mitm = require('mitm');
-const { blessup } = require('./server');
+const { blessup } = require('../../api/utils/server');
 const { parse } = require('url');
 
 module.exports = () => {

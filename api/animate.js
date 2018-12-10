@@ -1,5 +1,5 @@
 const fetch = require('isomorphic-fetch');
-const { blessup, selfURL } = require('../utils/server');
+const { blessup, selfURL } = require('./utils/server');
 
 module.exports = blessup( async ( req, res ) => {
   const start = Date.now();
