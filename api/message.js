@@ -6,7 +6,7 @@ module.exports = blessup( async ( req, res ) => {
 	let client;
 
 	if ( req.body.token !== process.env.SLACK_VERIFICATION_TOKEN ) {
-		return res.json( { error: 'womp womp' }, 500 );
+		return res.json( { ok: false, error: 'womp womp' }, 500 );
 	}
 
 	try {
@@ -18,8 +18,14 @@ module.exports = blessup( async ( req, res ) => {
 			team_id: req.body.team_id,
 		} );
 
-		// Fire off the animation async.
-		fetch( selfURL( req, '/api/animate' ), {
+		await client.close();
+
+		if ( ! auth ) {
+			throw { error: 'no_auth' };
+		}
+
+		// Fire off the animation request async.
+		const response = await fetch( selfURL( req, '/api/animate' ), {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json',
@@ -27,8 +33,17 @@ module.exports = blessup( async ( req, res ) => {
 			body: JSON.stringify( {
 				token: auth.access_token,
 				message: req.body,
+				type: 'start',
 			} ),
 		} );
+
+		const animating = await response.json();
+
+		if ( ! animating.ok ) {
+			return res.json( {
+				text: ':scream_cat: The animation failed to do animatey things!',
+			} );
+		}
 
 		// add whimsy
 		var mojibank = [
@@ -54,8 +69,6 @@ module.exports = blessup( async ( req, res ) => {
 			if ( mojis.indexOf( mojibank[ newmoji ] ) < 0 )
 				mojis = mojis.concat( mojibank.splice( newmoji, 1 ) );
 		}
-
-		await client.close();
 
 		return res.json( {
 			text: mojis.join( ' ' ),

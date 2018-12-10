@@ -1,14 +1,13 @@
 require('now-env');
-const Mitm = require('../utils/mitm');
-const { MongoDBServer } = require( 'mongomem' );
 const micro = require('micro');
 const listen = require('test-listen');
 const fetch = require('isomorphic-fetch');
 const test = require('ava');
 const exchange = require('../api/exchange');
 const qs = require('querystring');
+const Mitm = require('../utils/mitm');
 const { getClient } = require('../utils/db');
-const { setup } = require( '../utils/mongo' );
+const { before, beforeEach, after } = require( '../utils/mongo' );
 
 // Example failed slack oauth response.
 const oauthResponseInvalid = {
@@ -34,22 +33,18 @@ mitm.intercept( 'https://slack.com/api/oauth.access', ( req, res ) => {
 	} else {
 		res.json( oauthResponseValid );
 	}
-	res.end();
 } );
 
 // Before & after tests.
-test.before( 'start db server', async t => {
-	await MongoDBServer.start();
-	await setup( MongoDBServer, { auths: [] } );
-} );
-
+test.before( 'start db server', before );
+test.beforeEach( 'setup db', beforeEach( { auths: [] } ) );
 test.after.always( 'teardown', t => {
-	MongoDBServer.tearDown();
+	after();
 	mitm.disable();
 } );
 
 // Invalid token
-test( 'api/exchange invalid token', async t => {
+test.serial( 'api/exchange invalid token', async t => {
 	const service = micro( exchange );
 	const url = await listen( service );
 
@@ -76,7 +71,7 @@ test( 'api/exchange invalid token', async t => {
 } );
 
 // Valid token
-test( 'api/exchange valid token', async t => {
+test.serial( 'api/exchange valid token', async t => {
 	const service = micro( exchange );
 	const url = await listen( service );
 

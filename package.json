@@ -12,12 +12,11 @@
 		"mitm": "^1.5.0",
 		"mongodb": "^3.1.10",
 		"mongodb-memory-server": "^2.8.0",
-		"mongomem": "^0.1.9",
 		"now-env": "^3.1.0",
 		"test-listen": "^1.1.0",
 		"whatwg-fetch": "^3.0.0"
 	},
 	"scripts": {
-		"test": "NODE_ENV=development ava --verbose --serial"
+		"test": "NODE_ENV=development ava --verbose"
 	}
 }

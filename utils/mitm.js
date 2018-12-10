@@ -7,7 +7,7 @@ module.exports = () => {
 
 	// ignore localhost.
 	mitm.on( "connect", ( socket, opts ) => {
-		if ( opts.host.match( /localhost/ ) ) {
+		if ( opts.host.match( /(localhost|127\.0\.0\.1)/ ) ) {
 			socket.bypass();
 		}
 	} );

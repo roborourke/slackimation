@@ -1,28 +1,24 @@
 require('now-env');
-const { MongoDBServer } = require( 'mongomem' );
 const micro = require('micro');
 const listen = require('test-listen');
 const fetch = require('isomorphic-fetch');
 const test = require('ava');
 const message = require('../api/message');
-const { setup } = require( '../utils/mongo' );
+const { before, beforeEach, after } = require('../utils/mongo');
 
 // Before & after tests.
-test.before( 'start db server', async t => {
-	await MongoDBServer.start();
-	await setup( MongoDBServer, { auths: [ {
+test.before( 'start db server', before );
+test.beforeEach( 'setup db', beforeEach( {
+	auths: [ {
 		team_id: 'T1234567',
 		user_id: 'U1234567',
 		access_token: 'xxxp-1234567-1234567890',
-	} ] } );
-} );
-
-test.after.always( 'teardown', t => {
-	MongoDBServer.tearDown();
-} );
+	} ]
+} ) );
+test.after.always( 'teardown', after );
 
 // Bad verification token
-test( 'api/message invalid token', async t => {
+test.serial( 'api/message invalid token', async t => {
 	const service = micro( message );
 	const url = await listen( service );
 
@@ -40,30 +36,27 @@ test( 'api/message invalid token', async t => {
 
 	const json = await response.json();
 
-	t.deepEqual( json, { error: 'womp womp' } );
+	t.deepEqual( json, { ok: false, error: 'womp womp' } );
 
 	service.close();
 } );
 
 // Good verification token
-test( 'api/message valid token', async t => {
-	const service = micro( message );
-	const url = await listen( service );
-
-	const urls = [
-		'/',
-		'/api/animate',
-	];
-
-	// Listen for POST to animate.
+test.serial( 'api/message valid token', async t => {
 	t.plan(3);
-	service.on( 'request', async ( req, res ) => {
-		t.is( req.url, urls.shift() );
+
+	// Capture requests other than /
+	const animateProxy = fn => ( req, res ) => {
 		if ( req.url === '/api/animate' ) {
-			res.writeHead( 200, { 'Content-type': 'application/json' } );
-			res.end( JSON.stringify( { animating: true } ) );
+			t.pass();
+			return micro.send( res, 200, { ok: true } );
 		}
-	} );
+
+		return fn( req, res );
+	}
+
+	const service = micro( animateProxy( message ) );
+	const url = await listen( service );
 
 	const response = await fetch( url, {
 		method: 'POST',
@@ -74,6 +67,7 @@ test( 'api/message valid token', async t => {
 			token: process.env.SLACK_VERIFICATION_TOKEN,
 			user_id: 'U1234567',
 			team_id: 'T1234567',
+			message: { text: '/animate' },
 		} ),
 	} );
 
@@ -81,7 +75,7 @@ test( 'api/message valid token', async t => {
 
 	const json = await response.json();
 
-	t.true( json.text.indexOf( ':scream_cat:' ) !== 0 );
+	t.is( json.text.indexOf( ':scream_cat:' ), -1 );
 
 	service.close();
 } );

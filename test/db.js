@@ -1,17 +1,11 @@
 require('now-env');
 const test = require('ava');
-const { MongoDBServer } = require('mongomem');
 const { getClient } = require('../utils/db');
-const { setup } = require('../utils/mongo');
+const { before, beforeEach, after } = require('../utils/mongo');
 
-test.before( 'start db server', async t => {
-	await MongoDBServer.start();
-	await setup( MongoDBServer, { test: [] } );
-} );
-
-test.after.always( 'teardown', t => {
-	MongoDBServer.tearDown();
-} );
+test.before( 'start db server', before );
+test.beforeEach( 'setup', beforeEach( { test: [] } ) );
+test.after.always( 'teardown', after );
 
 test( 'api/db', async t => {
 	const client = await getClient();
@@ -30,5 +24,5 @@ test( 'api/db', async t => {
 	const finalDoc = await collection.findOne( { id: 1 } );
 
 	t.deepEqual( finalDoc.foo, data.foo );
-	await client.close();
+	client.close();
 } );
